@@ -7,10 +7,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="C·Finance">
 <title>C·Finance</title>
-<meta name="apple-mobile-web-app-title" content="C·Finance">
-<meta name="theme-color" content="#0a0a0f">
+<meta name="theme-color" content="#07050f">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='115' fill='%2307050f'/><rect x='60' y='60' width='392' height='392' rx='80' fill='%231c1c26'/><text x='256' y='200' text-anchor='middle' font-family='system-ui' font-weight='800' font-size='120' fill='%237b6cff'>C</text><text x='256' y='340' text-anchor='middle' font-family='system-ui' font-weight='400' font-size='80' fill='%2300e5a0'>Finance</text></svg>">
-<link rel="apple-touch-startup-image" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307050f'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -27,76 +25,48 @@
     --red-dim: rgba(255,110,176,0.12);
     --accent: #b388ff;
     --accent-dim: rgba(179,136,255,0.2);
-    --vinted: #c8ff80;
-    --trading: #b388ff;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overflow: hidden; background: var(--bg); }
-  html::before {
-    content: ''; position: fixed; inset: 0; z-index: -1;
-    background: 
-      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(120,40,200,0.55) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 80% at 80% 90%, rgba(80,10,160,0.6) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 50% at 50% 50%, rgba(60,0,120,0.4) 0%, transparent 70%),
-      #07050f;
-    filter: blur(0px);
-  }
-  html::after {
-    content: ''; position: fixed; inset: 0; z-index: -1;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 800' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    opacity: 0.4;
-  }
   body { font-family: 'DM Sans', sans-serif; color: var(--text); display: flex; flex-direction: column; }
-
-  /* SETUP SCREEN */
   #setup {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     height: 100vh; padding: 2rem; text-align: center; gap: 1.5rem;
   }
-  #setup h1 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 2rem; font-weight: 800; }
+  #setup h1 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 2.5rem; }
   #setup p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 300px; }
   #setup input {
     width: 100%; padding: 0.9rem 1rem; background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 12px; color: var(--text); font-size: 0.85rem; font-family: 'DM Sans', sans-serif;
-    outline: none; letter-spacing: 0.02em;
+    border-radius: 12px; color: var(--text); font-size: 0.85rem; font-family: 'DM Sans', sans-serif; outline: none;
   }
   #setup input:focus { border-color: var(--accent); }
   #setup input::placeholder { color: var(--muted); }
   .setup-btn {
-    width: 100%; padding: 1rem; background: linear-gradient(135deg, #9c60ff 0%, #6a20d0 100%); border: none; border-radius: 12px;
-    color: #fff; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 1rem; font-weight: 700;
-    cursor: pointer; transition: opacity 0.2s;
+    width: 100%; padding: 1rem; background: linear-gradient(135deg, #9c60ff 0%, #6a20d0 100%);
+    border: none; border-radius: 12px; color: #fff; font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.04em; font-size: 1.1rem; cursor: pointer; transition: opacity 0.2s;
   }
   .setup-btn:active { opacity: 0.8; }
   #setup-error { color: var(--red); font-size: 0.82rem; display: none; }
   #setup-spinner { display: none; color: var(--muted); font-size: 0.85rem; }
-
-  /* MAIN APP */
   #app { display: none; flex-direction: column; height: 100vh; overflow: hidden; }
-
-  /* HEADER */
   .header {
     padding: calc(var(--safe-top) + 1rem) 1.25rem 0.75rem;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
   }
-  .header-title { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
+  .header-title { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 1.3rem; }
   .header-date { font-size: 0.75rem; color: var(--muted); }
   .refresh-btn {
     width: 34px; height: 34px; border-radius: 10px; background: var(--surface2);
     border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-size: 0.9rem; transition: transform 0.3s;
+    cursor: pointer; font-size: 0.9rem;
   }
   .refresh-btn.spinning { animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* SCROLL AREA */
-  .scroll { flex: 1; overflow-y: auto; padding: 0 1.25rem; scroll-behavior: smooth; }
+  .scroll { flex: 1; overflow-y: auto; padding: 0 1.25rem; }
   .scroll::-webkit-scrollbar { display: none; }
-
-  /* BALANCE CARD */
   .balance-card {
     background: linear-gradient(135deg, rgba(80,20,160,0.4) 0%, rgba(40,5,100,0.5) 100%);
     border: 1px solid rgba(160,100,255,0.25); border-radius: 20px;
@@ -108,11 +78,6 @@
     width: 180px; height: 180px; border-radius: 50%;
     background: rgba(140,80,255,0.3); filter: blur(40px); pointer-events: none;
   }
-  .balance-card::after {
-    content: ''; position: absolute; bottom: -30px; left: -30px;
-    width: 120px; height: 120px; border-radius: 50%;
-    background: rgba(100,40,200,0.2); filter: blur(30px); pointer-events: none;
-  }
   .balance-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
   .balance-amount { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; font-size: 3.2rem; line-height: 1; }
   .balance-amount.positive { color: var(--green); }
@@ -120,36 +85,33 @@
   .balance-row { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
   .balance-mini { flex: 1; background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.75rem; }
   .balance-mini-label { font-size: 0.68rem; color: var(--muted); margin-bottom: 0.3rem; }
-  .balance-mini-val { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 1rem; font-weight: 700; }
+  .balance-mini-val { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 1rem; }
   .balance-mini-val.pos { color: var(--green); }
   .balance-mini-val.neg { color: var(--red); }
-
-  /* QUICK ACTIONS */
   .section-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 1.25rem 0 0.6rem; }
   .actions-row { display: flex; gap: 0.6rem; }
   .action-btn {
     flex: 1; padding: 0.85rem 0.5rem; border-radius: 14px; border: 1px solid rgba(160,100,255,0.2);
-    background: rgba(50,20,100,0.35); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; flex-direction: column; align-items: center;
-    gap: 0.35rem; cursor: pointer; transition: transform 0.15s, background 0.15s;
+    background: rgba(50,20,100,0.35); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    display: flex; flex-direction: column; align-items: center; gap: 0.35rem; cursor: pointer; transition: transform 0.15s;
   }
-  .action-btn:active { transform: scale(0.96); background: var(--surface2); }
+  .action-btn:active { transform: scale(0.96); }
   .action-btn .icon { font-size: 1.3rem; }
   .action-btn .label { font-size: 0.68rem; color: var(--muted); text-align: center; line-height: 1.2; }
-
-  /* MODAL */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100;
     display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.25s;
   }
   .modal-overlay.open { opacity: 1; pointer-events: all; }
   .modal {
-    width: 100%; background: var(--surface); border-radius: 24px 24px 0 0;
+    width: 100%; background: rgba(25,10,55,0.97); border-radius: 24px 24px 0 0;
     padding: 1.25rem 1.25rem calc(var(--safe-bottom) + 1.5rem);
     transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+    backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
   }
   .modal-overlay.open .modal { transform: translateY(0); }
   .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 1.25rem; }
-  .modal-title { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem; }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 1.3rem; margin-bottom: 1.25rem; }
   .field { margin-bottom: 1rem; }
   .field label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
   .field input, .field select {
@@ -159,100 +121,73 @@
   }
   .field input:focus, .field select:focus { border-color: var(--accent); }
   .modal-submit {
-    width: 100%; padding: 1rem; background: linear-gradient(135deg, #9c60ff 0%, #6a20d0 100%); border: none; border-radius: 14px;
-    color: #fff; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 1rem; font-weight: 700;
-    cursor: pointer; margin-top: 0.5rem; transition: opacity 0.2s;
+    width: 100%; padding: 1rem; background: linear-gradient(135deg, #9c60ff 0%, #6a20d0 100%);
+    border: none; border-radius: 14px; color: #fff; font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.04em; font-size: 1.1rem; cursor: pointer; margin-top: 0.5rem; transition: opacity 0.2s;
   }
   .modal-submit:active { opacity: 0.8; }
   .modal-submit:disabled { opacity: 0.4; cursor: not-allowed; }
   .modal-cancel { width: 100%; padding: 0.8rem; background: transparent; border: none; color: var(--muted); font-size: 0.9rem; cursor: pointer; margin-top: 0.5rem; }
-
-  /* CHART */
   .chart-card {
     background: rgba(40,15,80,0.35); border: 1px solid rgba(160,100,255,0.15); border-radius: 20px;
     padding: 1.25rem; margin-bottom: 1rem; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   }
   .chart-card canvas { max-height: 180px; }
-
-  /* MOVEMENTS */
   .movements-list { margin-bottom: calc(var(--safe-bottom) + 4rem); }
-  .mov-item {
-    display: flex; align-items: center; gap: 0.85rem;
-    padding: 0.85rem 0; border-bottom: 1px solid var(--border);
-  }
+  .mov-item { display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
   .mov-item:last-child { border-bottom: none; }
-  .mov-icon {
-    width: 38px; height: 38px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
-  }
+  .mov-icon { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
   .mov-icon.ingreso { background: var(--green-dim); }
   .mov-icon.gasto { background: var(--red-dim); }
   .mov-info { flex: 1; min-width: 0; }
   .mov-name { font-size: 0.88rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .mov-cat { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
   .mov-right { text-align: right; flex-shrink: 0; }
-  .mov-amount { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 0.95rem; font-weight: 700; }
+  .mov-amount { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; font-size: 0.95rem; }
   .mov-amount.pos { color: var(--green); }
   .mov-amount.neg { color: var(--red); }
   .mov-date { font-size: 0.7rem; color: var(--muted); margin-top: 0.1rem; }
-
-  /* EMPTY STATE */
   .empty { text-align: center; padding: 2rem 1rem; color: var(--muted); font-size: 0.85rem; }
-
-  /* LOADING */
   .skeleton { background: var(--surface2); border-radius: 8px; animation: pulse 1.5s ease infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  .sk-balance { height: 52px; width: 60%; margin: 0.5rem 0 1rem; }
-  .sk-row { height: 24px; margin: 0.5rem 0; }
   .sk-mov { height: 54px; border-radius: 14px; margin: 0.5rem 0; }
-
-  /* TAB BAR */
   .tab-bar {
     position: fixed; bottom: 0; left: 0; right: 0;
     padding: 0.75rem 1rem calc(var(--safe-bottom) + 0.75rem);
     background: rgba(15,5,35,0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-    border-top: 1px solid var(--border);
-    display: flex; justify-content: space-around;
+    border-top: 1px solid var(--border); display: flex; justify-content: space-around;
   }
   .tab { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; cursor: pointer; padding: 0.25rem 1rem; }
   .tab-icon { font-size: 1.2rem; }
   .tab-label { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.04em; }
   .tab.active .tab-label { color: var(--accent); }
-
-  /* SUCCESS TOAST */
   .toast {
     position: fixed; top: calc(var(--safe-top) + 1rem); left: 50%; transform: translateX(-50%) translateY(-100%);
     background: var(--green); color: #000; padding: 0.65rem 1.25rem; border-radius: 20px;
-    font-size: 0.82rem; font-weight: 600; z-index: 200; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    white-space: nowrap;
+    font-size: 0.82rem; font-weight: 600; z-index: 200; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); white-space: nowrap;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
-
-  /* PAGE VIEWS */
-  .page { display: none; }
-  .page.active { display: block; }
 </style>
 </head>
 <body>
+<canvas id="liquid-canvas" style="position:fixed;inset:0;z-index:-1;width:100%;height:100%"></canvas>
 
-<!-- SETUP -->
 <div id="setup">
   <div style="font-size:3rem">💰</div>
   <div>
-    <h1 style="letter-spacing:-0.03em">C·Finance</h1>
+    <h1>C·Finance</h1>
     <p style="margin-top:0.5rem">Tu panel financiero personal. Conectado a Notion.</p>
   </div>
   <div style="width:100%;max-width:340px;display:flex;flex-direction:column;gap:0.75rem">
     <input type="password" id="token-input" placeholder="ntn_xxxx o secret_xxxx" autocomplete="off" autocorrect="off" spellcheck="false">
     <input type="text" id="db-input" placeholder="ID de base de datos Movimientos" autocomplete="off">
-    <p style="font-size:0.75rem;color:var(--muted);text-align:left">El ID está en la URL de tu base de datos en Notion: notion.so/<b style="color:var(--text)">ESTE-ID</b>?v=...</p>
+    <p style="font-size:0.75rem;color:var(--muted);text-align:left">El ID está en la URL de Notion: notion.so/<b style="color:var(--text)">ESTE-ID</b>?v=...</p>
     <button class="setup-btn" onclick="connectNotion()">Conectar Notion →</button>
     <div id="setup-spinner">Conectando...</div>
     <div id="setup-error">No se pudo conectar. Revisa el token y el ID.</div>
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <div class="header">
     <div>
@@ -261,11 +196,8 @@
     </div>
     <div class="refresh-btn" id="refresh-btn" onclick="loadData()">↻</div>
   </div>
-
   <div class="scroll" id="scroll-area">
-
-    <!-- BALANCE -->
-    <div class="balance-card" id="balance-card">
+    <div class="balance-card">
       <div class="balance-label">Balance del mes</div>
       <div class="balance-amount" id="balance-amount">—</div>
       <div class="balance-row">
@@ -279,72 +211,35 @@
         </div>
       </div>
     </div>
-
-    <!-- ACCIONES RÁPIDAS -->
     <div class="section-label">Acción rápida</div>
     <div class="actions-row">
-      <div class="action-btn" onclick="openModal('vinted')">
-        <div class="icon">📦</div>
-        <div class="label">Retirada Vinted</div>
-      </div>
-      <div class="action-btn" onclick="openModal('trading')">
-        <div class="icon">📈</div>
-        <div class="label">Retirada Trading</div>
-      </div>
-      <div class="action-btn" onclick="openModal('gasto')">
-        <div class="icon">💸</div>
-        <div class="label">Nuevo Gasto</div>
-      </div>
+      <div class="action-btn" onclick="openModal('vinted')"><div class="icon">📦</div><div class="label">Retirada Vinted</div></div>
+      <div class="action-btn" onclick="openModal('trading')"><div class="icon">📈</div><div class="label">Retirada Trading</div></div>
+      <div class="action-btn" onclick="openModal('gasto')"><div class="icon">💸</div><div class="label">Nuevo Gasto</div></div>
     </div>
-
-    <!-- GRÁFICO -->
     <div class="section-label">Este mes por categoría</div>
-    <div class="chart-card">
-      <canvas id="chart-cat"></canvas>
-    </div>
-
-    <!-- ÚLTIMOS MOVIMIENTOS -->
+    <div class="chart-card"><canvas id="chart-cat"></canvas></div>
     <div class="section-label">Últimos movimientos</div>
     <div class="movements-list" id="movements-list">
       <div class="sk-mov skeleton"></div>
       <div class="sk-mov skeleton"></div>
       <div class="sk-mov skeleton"></div>
     </div>
-
   </div>
-
-  <!-- TAB BAR -->
   <div class="tab-bar">
-    <div class="tab active">
-      <div class="tab-icon">🏠</div>
-      <div class="tab-label">INICIO</div>
-    </div>
-    <div class="tab" onclick="openModal('gasto')">
-      <div class="tab-icon">＋</div>
-      <div class="tab-label">AÑADIR</div>
-    </div>
-    <div class="tab" onclick="scrollToMovements()">
-      <div class="tab-icon">📋</div>
-      <div class="tab-label">TODO</div>
-    </div>
+    <div class="tab active"><div class="tab-icon">🏠</div><div class="tab-label">INICIO</div></div>
+    <div class="tab" onclick="openModal('gasto')"><div class="tab-icon">＋</div><div class="tab-label">AÑADIR</div></div>
+    <div class="tab" onclick="scrollToMovements()"><div class="tab-icon">📋</div><div class="tab-label">TODO</div></div>
   </div>
 </div>
 
-<!-- MODAL NUEVO MOVIMIENTO -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="modal-title">Nuevo movimiento</div>
-
+    <div class="field"><label>Concepto</label><input type="text" id="m-concepto" placeholder="Ej: Retirada marzo..."></div>
+    <div class="field"><label>Cantidad (€)</label><input type="number" id="m-cantidad" placeholder="0.00" step="0.01" min="0"></div>
     <div class="field">
-      <label>Concepto</label>
-      <input type="text" id="m-concepto" placeholder="Ej: Retirada marzo...">
-    </div>
-    <div class="field">
-      <label>Cantidad (€)</label>
-      <input type="number" id="m-cantidad" placeholder="0.00" step="0.01" min="0">
-    </div>
-    <div class="field" id="field-categoria">
       <label>Categoría</label>
       <select id="m-categoria">
         <option value="Vinted retirada">📦 Vinted retirada</option>
@@ -357,313 +252,158 @@
         <option value="Personal">👤 Personal</option>
       </select>
     </div>
-    <div class="field">
-      <label>Fecha</label>
-      <input type="date" id="m-fecha">
-    </div>
-
+    <div class="field"><label>Fecha</label><input type="date" id="m-fecha"></div>
     <button class="modal-submit" id="modal-submit" onclick="saveMovimiento()">Guardar</button>
     <button class="modal-cancel" onclick="closeModal()">Cancelar</button>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast">✓ Guardado</div>
 
 <script>
-  let TOKEN = '';
-  let DB_ID = '';
-  let allMovements = [];
-  let catChart = null;
-  let currentModalType = 'gasto';
-
-  // ── SETUP ──
-  function connectNotion() {
-    const t = document.getElementById('token-input').value.trim();
-    const d = document.getElementById('db-input').value.trim().replace(/-/g,'').replace(/.*\//,'').split('?')[0];
-    if (!t || !d) { showError('Rellena los dos campos'); return; }
-    TOKEN = t;
-    DB_ID = d.length === 32 ? d : d;
-    document.getElementById('setup-spinner').style.display = 'block';
-    document.getElementById('setup-error').style.display = 'none';
+  let TOKEN='',DB_ID='',allMovements=[],catChart=null;
+  function connectNotion(){
+    const t=document.getElementById('token-input').value.trim();
+    const d=document.getElementById('db-input').value.trim().replace(/-/g,'').replace(/.*\//,'').split('?')[0];
+    if(!t||!d){showError('Rellena los dos campos');return;}
+    TOKEN=t;DB_ID=d;
+    document.getElementById('setup-spinner').style.display='block';
+    document.getElementById('setup-error').style.display='none';
     loadData(true);
   }
-
-  function showError(msg) {
-    const el = document.getElementById('setup-error');
-    el.textContent = msg;
-    el.style.display = 'block';
-    document.getElementById('setup-spinner').style.display = 'none';
+  function showError(msg){
+    const el=document.getElementById('setup-error');
+    el.textContent=msg;el.style.display='block';
+    document.getElementById('setup-spinner').style.display='none';
   }
-
-  // ── LOAD DATA ──
-  async function loadData(initial = false) {
-    const btn = document.getElementById('refresh-btn');
-    if (btn) btn.classList.add('spinning');
-
-    try {
-      const now = new Date();
-      const y = now.getFullYear(), m = String(now.getMonth()+1).padStart(2,'0');
-      const startMonth = `${y}-${m}-01`;
-      const endMonth = `${y}-${m}-31`;
-
-      const res = await notionQuery(DB_ID, {
-        filter: {
-          and: [
-            { property: 'Fecha', date: { on_or_after: startMonth } },
-            { property: 'Fecha', date: { on_or_before: endMonth } }
-          ]
-        },
-        sorts: [{ property: 'Fecha', direction: 'descending' }],
-        page_size: 50
+  async function loadData(initial=false){
+    const btn=document.getElementById('refresh-btn');
+    if(btn)btn.classList.add('spinning');
+    try{
+      const now=new Date();
+      const y=now.getFullYear(),m=String(now.getMonth()+1).padStart(2,'0');
+      const res=await notionQuery(DB_ID,{
+        filter:{and:[{property:'Fecha',date:{on_or_after:`${y}-${m}-01`}},{property:'Fecha',date:{on_or_before:`${y}-${m}-31`}}]},
+        sorts:[{property:'Fecha',direction:'descending'}],page_size:50
       });
-
-      if (!res || res.object === 'error') throw new Error(res?.message || 'Error');
-
-      if (initial) {
-        localStorage.setItem('fin_token', TOKEN);
-        localStorage.setItem('fin_db', DB_ID);
-        document.getElementById('setup').style.display = 'none';
-        document.getElementById('app').style.display = 'flex';
+      if(!res||res.object==='error')throw new Error(res?.message||'Error');
+      if(initial){
+        localStorage.setItem('fin_token',TOKEN);
+        localStorage.setItem('fin_db',DB_ID);
+        document.getElementById('setup').style.display='none';
+        document.getElementById('app').style.display='flex';
       }
-
-      allMovements = res.results.map(parseMovement);
+      allMovements=res.results.map(r=>{
+        const p=r.properties;
+        return{id:r.id,concepto:p.Concepto?.title?.[0]?.plain_text||'—',tipo:p.Tipo?.select?.name||'—',cantidad:p.Cantidad?.number||0,fecha:p.Fecha?.date?.start||'',categoria:p['Categoría']?.select?.name||'—'};
+      });
       renderAll();
-
-    } catch(e) {
-      if (initial) showError('No se pudo conectar. Revisa token e ID.');
-      console.error(e);
-    } finally {
-      if (btn) { setTimeout(()=>btn.classList.remove('spinning'), 500); }
-    }
+    }catch(e){if(initial)showError('No se pudo conectar. Revisa token e ID.');console.error(e);}
+    finally{if(btn)setTimeout(()=>btn.classList.remove('spinning'),500);}
   }
-
-  function parseMovement(r) {
-    const p = r.properties;
-    return {
-      id: r.id,
-      concepto: p.Concepto?.title?.[0]?.plain_text || '—',
-      tipo: p.Tipo?.select?.name || '—',
-      cantidad: p.Cantidad?.number || 0,
-      fecha: p.Fecha?.date?.start || '',
-      categoria: p['Categoría']?.select?.name || '—',
-      cuenta: p.Cuenta?.select?.name || '—'
-    };
-  }
-
-  function renderAll() {
-    // Date
-    const now = new Date();
-    document.getElementById('header-date').textContent = now.toLocaleDateString('es-ES', {day:'numeric',month:'long',year:'numeric'});
-
-    // Totals
-    const ingresos = allMovements.filter(m=>m.tipo==='Ingreso').reduce((s,m)=>s+m.cantidad,0);
-    const gastos = allMovements.filter(m=>m.tipo==='Gasto').reduce((s,m)=>s+m.cantidad,0);
-    const balance = ingresos - gastos;
-
-    document.getElementById('total-ingresos').textContent = fmt(ingresos);
-    document.getElementById('total-gastos').textContent = fmt(gastos);
-    const balEl = document.getElementById('balance-amount');
-    balEl.textContent = fmt(balance);
-    balEl.className = 'balance-amount ' + (balance >= 0 ? 'positive' : 'negative');
-
-    // Movements
-    const list = document.getElementById('movements-list');
-    if (allMovements.length === 0) {
-      list.innerHTML = '<div class="empty">Sin movimientos este mes</div>';
-    } else {
-      list.innerHTML = allMovements.map(m => `
-        <div class="mov-item">
-          <div class="mov-icon ${m.tipo.toLowerCase()}">${m.tipo==='Ingreso'?'↑':'↓'}</div>
-          <div class="mov-info">
-            <div class="mov-name">${m.concepto}</div>
-            <div class="mov-cat">${m.categoria}</div>
-          </div>
-          <div class="mov-right">
-            <div class="mov-amount ${m.tipo==='Ingreso'?'pos':'neg'}">${m.tipo==='Ingreso'?'+':'-'}${fmt(m.cantidad)}</div>
-            <div class="mov-date">${fmtDate(m.fecha)}</div>
-          </div>
+  function renderAll(){
+    const now=new Date();
+    document.getElementById('header-date').textContent=now.toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
+    const ingresos=allMovements.filter(m=>m.tipo==='Ingreso').reduce((s,m)=>s+m.cantidad,0);
+    const gastos=allMovements.filter(m=>m.tipo==='Gasto').reduce((s,m)=>s+m.cantidad,0);
+    const balance=ingresos-gastos;
+    document.getElementById('total-ingresos').textContent=fmt(ingresos);
+    document.getElementById('total-gastos').textContent=fmt(gastos);
+    const balEl=document.getElementById('balance-amount');
+    balEl.textContent=fmt(balance);
+    balEl.className='balance-amount '+(balance>=0?'positive':'negative');
+    const list=document.getElementById('movements-list');
+    list.innerHTML=allMovements.length===0?'<div class="empty">Sin movimientos este mes</div>':allMovements.map(m=>`
+      <div class="mov-item">
+        <div class="mov-icon ${m.tipo.toLowerCase()}">${m.tipo==='Ingreso'?'↑':'↓'}</div>
+        <div class="mov-info"><div class="mov-name">${m.concepto}</div><div class="mov-cat">${m.categoria}</div></div>
+        <div class="mov-right">
+          <div class="mov-amount ${m.tipo==='Ingreso'?'pos':'neg'}">${m.tipo==='Ingreso'?'+':'-'}${fmt(m.cantidad)}</div>
+          <div class="mov-date">${fmtDate(m.fecha)}</div>
         </div>
-      `).join('');
-    }
-
-    // Chart
+      </div>`).join('');
     renderChart();
   }
-
-  function renderChart() {
-    const cats = {};
-    allMovements.forEach(m => {
-      if (!cats[m.categoria]) cats[m.categoria] = 0;
-      cats[m.categoria] += m.cantidad;
-    });
-    const labels = Object.keys(cats);
-    const data = Object.values(cats);
-
-    const colors = ['#7b6cff','#00e5a0','#ff5c7a','#ffb547','#00c8ff','#ff8c69','#c084fc','#34d399'];
-
-    if (catChart) catChart.destroy();
-    const ctx = document.getElementById('chart-cat').getContext('2d');
-    catChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels,
-        datasets: [{
-          data,
-          backgroundColor: colors.slice(0, labels.length),
-          borderWidth: 0,
-          hoverOffset: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        cutout: '68%',
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              color: 'rgba(240,240,245,0.6)',
-              font: { size: 10, family: 'DM Sans' },
-              boxWidth: 10, boxHeight: 10,
-              padding: 10
-            }
-          },
-          tooltip: {
-            callbacks: {
-              label: ctx => ` ${fmt(ctx.raw)}`
-            }
-          }
-        }
-      }
-    });
+  function renderChart(){
+    const cats={};
+    allMovements.forEach(m=>{if(!cats[m.categoria])cats[m.categoria]=0;cats[m.categoria]+=m.cantidad;});
+    if(catChart)catChart.destroy();
+    const ctx=document.getElementById('chart-cat').getContext('2d');
+    catChart=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(cats),datasets:[{data:Object.values(cats),backgroundColor:['#7b6cff','#c8ff80','#ff6eb0','#ffb547','#00c8ff','#ff8c69','#c084fc','#34d399'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'68%',plugins:{legend:{position:'bottom',labels:{color:'rgba(200,180,255,0.6)',font:{size:10,family:'DM Sans'},boxWidth:10,boxHeight:10,padding:10}},tooltip:{callbacks:{label:ctx=>` ${fmt(ctx.raw)}`}}}}});
   }
-
-  // ── MODAL ──
-  function openModal(type) {
-    currentModalType = type;
-    const titles = { vinted: '📦 Retirada Vinted', trading: '📈 Retirada Trading', gasto: '💸 Nuevo Gasto' };
-    document.getElementById('modal-title').textContent = titles[type] || 'Nuevo movimiento';
-
-    const catSelect = document.getElementById('m-categoria');
-    if (type === 'vinted') catSelect.value = 'Vinted retirada';
-    else if (type === 'trading') catSelect.value = 'Trading retirada';
-    else catSelect.value = 'Comida';
-
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('m-fecha').value = today;
-    document.getElementById('m-concepto').value = '';
-    document.getElementById('m-cantidad').value = '';
-
+  function openModal(type){
+    const titles={vinted:'📦 Retirada Vinted',trading:'📈 Retirada Trading',gasto:'💸 Nuevo Gasto'};
+    document.getElementById('modal-title').textContent=titles[type]||'Nuevo movimiento';
+    const cat=document.getElementById('m-categoria');
+    if(type==='vinted')cat.value='Vinted retirada';
+    else if(type==='trading')cat.value='Trading retirada';
+    else cat.value='Comida';
+    document.getElementById('m-fecha').value=new Date().toISOString().split('T')[0];
+    document.getElementById('m-concepto').value='';
+    document.getElementById('m-cantidad').value='';
     document.getElementById('modal-overlay').classList.add('open');
   }
-
-  function closeModal() {
-    document.getElementById('modal-overlay').classList.remove('open');
+  function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
+  function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
+  async function saveMovimiento(){
+    const concepto=document.getElementById('m-concepto').value.trim();
+    const cantidad=parseFloat(document.getElementById('m-cantidad').value);
+    const categoria=document.getElementById('m-categoria').value;
+    const fecha=document.getElementById('m-fecha').value;
+    if(!concepto||!cantidad||!fecha)return;
+    const tipo=['Vinted retirada','Trading retirada','Otros ingresos'].includes(categoria)?'Ingreso':'Gasto';
+    const btn=document.getElementById('modal-submit');
+    btn.disabled=true;btn.textContent='Guardando...';
+    try{
+      await notionCreate(DB_ID,{concepto,tipo,cantidad,categoria,fecha});
+      closeModal();showToast('✓ Guardado correctamente');await loadData();
+    }catch(e){alert('Error al guardar.');}
+    finally{btn.disabled=false;btn.textContent='Guardar';}
   }
-
-  function closeModalOutside(e) {
-    if (e.target === document.getElementById('modal-overlay')) closeModal();
-  }
-
-  async function saveMovimiento() {
-    const concepto = document.getElementById('m-concepto').value.trim();
-    const cantidad = parseFloat(document.getElementById('m-cantidad').value);
-    const categoria = document.getElementById('m-categoria').value;
-    const fecha = document.getElementById('m-fecha').value;
-
-    if (!concepto || !cantidad || !fecha) return;
-
-    const tipo = ['Vinted retirada','Trading retirada','Otros ingresos'].includes(categoria) ? 'Ingreso' : 'Gasto';
-
-    const btn = document.getElementById('modal-submit');
-    btn.disabled = true;
-    btn.textContent = 'Guardando...';
-
-    try {
-      await notionCreate(DB_ID, { concepto, tipo, cantidad, categoria, fecha });
-      closeModal();
-      showToast('✓ Guardado correctamente');
-      await loadData();
-    } catch(e) {
-      alert('Error al guardar. Inténtalo de nuevo.');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Guardar';
-    }
-  }
-
-  // ── NOTION API ──
-  async function notionQuery(dbId, body) {
-    const cleanId = dbId.replace(/-/g,'');
-    const formatted = cleanId.replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/,'$1-$2-$3-$4-$5');
-    const r = await fetch(`/api/notion/databases/${formatted}/query`, {
-      method: 'POST',
-      headers: {
-        'x-notion-token': TOKEN,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
+  async function notionQuery(dbId,body){
+    const id=dbId.replace(/-/g,'').replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/,'$1-$2-$3-$4-$5');
+    const r=await fetch(`/api/notion/databases/${id}/query`,{method:'POST',headers:{'x-notion-token':TOKEN,'Content-Type':'application/json'},body:JSON.stringify(body)});
     return r.json();
   }
-
-  async function notionCreate(dbId, { concepto, tipo, cantidad, categoria, fecha }) {
-    const cleanId = dbId.replace(/-/g,'');
-    const formatted = cleanId.replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/,'$1-$2-$3-$4-$5');
-    const r = await fetch('/api/notion/pages', {
-      method: 'POST',
-      headers: {
-        'x-notion-token': TOKEN,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        parent: { database_id: formatted },
-        properties: {
-          Concepto: { title: [{ text: { content: concepto } }] },
-          Tipo: { select: { name: tipo } },
-          Cantidad: { number: cantidad },
-          Fecha: { date: { start: fecha } },
-          'Categoría': { select: { name: categoria } },
-          Cuenta: { select: { name: 'Wise' } }
-        }
-      })
-    });
+  async function notionCreate(dbId,{concepto,tipo,cantidad,categoria,fecha}){
+    const id=dbId.replace(/-/g,'').replace(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/,'$1-$2-$3-$4-$5');
+    const r=await fetch('/api/notion/pages',{method:'POST',headers:{'x-notion-token':TOKEN,'Content-Type':'application/json'},body:JSON.stringify({parent:{database_id:id},properties:{Concepto:{title:[{text:{content:concepto}}]},Tipo:{select:{name:tipo}},Cantidad:{number:cantidad},Fecha:{date:{start:fecha}},'Categoría':{select:{name:categoria}},Cuenta:{select:{name:'Wise'}}}})});
     return r.json();
   }
-
-  // ── HELPERS ──
-  function fmt(n) {
-    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(n);
+  function fmt(n){return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR',minimumFractionDigits:2}).format(n);}
+  function fmtDate(d){if(!d)return'';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`;}
+  function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+  function scrollToMovements(){document.getElementById('scroll-area').scrollTo({top:9999,behavior:'smooth'});}
+  const st=localStorage.getItem('fin_token'),sd=localStorage.getItem('fin_db');
+  if(st&&sd){TOKEN=st;DB_ID=sd;document.getElementById('setup').style.display='none';document.getElementById('app').style.display='flex';loadData();}
+</script>
+<script>
+(function(){
+  const canvas=document.getElementById('liquid-canvas');
+  const ctx=canvas.getContext('2d');
+  let W,H,t=0;
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  function draw(){
+    t+=0.003;ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#07050f';ctx.fillRect(0,0,W,H);
+    [{x:0.2+Math.sin(t*0.7)*0.15,y:0.15+Math.cos(t*0.5)*0.1,r:0.45,a:0.5,c:'120,40,220'},
+     {x:0.8+Math.cos(t*0.6)*0.1,y:0.8+Math.sin(t*0.8)*0.1,r:0.4,a:0.45,c:'80,10,180'},
+     {x:0.5+Math.sin(t*0.4)*0.2,y:0.5+Math.cos(t*0.9)*0.15,r:0.35,a:0.3,c:'100,20,200'},
+     {x:0.1+Math.cos(t*1.1)*0.08,y:0.7+Math.sin(t*0.7)*0.12,r:0.25,a:0.35,c:'60,0,140'},
+     {x:0.9+Math.sin(t*0.5)*0.08,y:0.2+Math.cos(t*1.2)*0.1,r:0.3,a:0.3,c:'140,50,255'}
+    ].forEach(b=>{
+      const gx=b.x*W,gy=b.y*H,gr=b.r*Math.max(W,H);
+      const g=ctx.createRadialGradient(gx,gy,0,gx,gy,gr);
+      g.addColorStop(0,`rgba(${b.c},${b.a})`);
+      g.addColorStop(0.5,`rgba(${b.c},${b.a*0.4})`);
+      g.addColorStop(1,`rgba(${b.c},0)`);
+      ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    });
+    requestAnimationFrame(draw);
   }
-
-  function fmtDate(d) {
-    if (!d) return '';
-    const [y,m,day] = d.split('-');
-    return `${day}/${m}/${y}`;
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-  }
-
-  function scrollToMovements() {
-    document.getElementById('scroll-area').scrollTo({ top: 9999, behavior: 'smooth' });
-  }
-
-  // ── INIT ──
-  const savedToken = localStorage.getItem('fin_token');
-  const savedDb = localStorage.getItem('fin_db');
-  if (savedToken && savedDb) {
-    TOKEN = savedToken;
-    DB_ID = savedDb;
-    document.getElementById('setup').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    loadData();
-  }
+  draw();
+})();
 </script>
 </body>
 </html>
