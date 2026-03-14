@@ -30,6 +30,14 @@
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overflow: hidden; background: var(--bg); }
+body {
+  background: 
+    radial-gradient(ellipse 70% 50% at 15% 10%, rgba(130,40,230,0.7) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 70% at 85% 85%, rgba(90,10,190,0.75) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(70,0,150,0.5) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 50% at 80% 20%, rgba(110,30,210,0.4) 0%, transparent 50%),
+    #07050f;
+}
   body { font-family: 'DM Sans', sans-serif; color: var(--text); display: flex; flex-direction: column; }
   #setup {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
