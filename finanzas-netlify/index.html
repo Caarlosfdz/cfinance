@@ -257,7 +257,7 @@ body {
         <option value="Gasolina">⛽ Gasolina</option>
         <option value="Compras">🛍️ Compras</option>
         <option value="Suscripciones">📱 Suscripciones</option>
-        <option value="Personal">👤 Personal</option>
+       <option value="Ahorro">💰 Ahorro</option>
       </select>
     </div>
     <div class="field"><label>Fecha</label><input type="date" id="m-fecha"></div>
@@ -359,7 +359,7 @@ body {
     const categoria=document.getElementById('m-categoria').value;
     const fecha=document.getElementById('m-fecha').value;
     if(!concepto||!cantidad||!fecha)return;
-    const tipo=['Vinted retirada','Trading retirada','Otros ingresos'].includes(categoria)?'Ingreso':'Gasto';
+    const tipo=['Vinted retirada','Trading retirada','Otros ingresos','Ahorro'].includes(categoria)?'Ingreso':'Gasto';
     const btn=document.getElementById('modal-submit');
     btn.disabled=true;btn.textContent='Guardando...';
     try{
