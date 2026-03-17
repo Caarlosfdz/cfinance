@@ -1,4 +1,4 @@
-<option value="Personal">👤 Personal</option><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -30,15 +30,15 @@
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overflow: hidden; background: var(--bg); }
-body {
-  background: 
-    radial-gradient(ellipse 70% 50% at 15% 10%, rgba(130,40,230,0.7) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 70% at 85% 85%, rgba(90,10,190,0.75) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(70,0,150,0.5) 0%, transparent 60%),
-    radial-gradient(ellipse 30% 50% at 80% 20%, rgba(110,30,210,0.4) 0%, transparent 50%),
-    #07050f;
-}
-  body { font-family: 'DM Sans', sans-serif; color: var(--text); display: flex; flex-direction: column; }
+  body {
+    font-family: 'DM Sans', sans-serif; color: var(--text); display: flex; flex-direction: column;
+    background:
+      radial-gradient(ellipse 70% 50% at 15% 10%, rgba(130,40,230,0.7) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 70% at 85% 85%, rgba(90,10,190,0.75) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(70,0,150,0.5) 0%, transparent 60%),
+      radial-gradient(ellipse 30% 50% at 80% 20%, rgba(110,30,210,0.4) 0%, transparent 50%),
+      #07050f;
+  }
   #setup {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     height: 100vh; padding: 2rem; text-align: center; gap: 1.5rem;
@@ -140,7 +140,7 @@ body {
     background: rgba(40,15,80,0.35); border: 1px solid rgba(160,100,255,0.15); border-radius: 20px;
     padding: 1.25rem; margin-bottom: 1rem; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   }
-  .chart-card canvas { max-height: 180px; }
+  .chart-card canvas { max-height: 220px; }
   .movements-list { margin-bottom: calc(var(--safe-bottom) + 4rem); }
   .mov-item { display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
   .mov-item:last-child { border-bottom: none; }
@@ -178,7 +178,6 @@ body {
 </style>
 </head>
 <body>
-<canvas id="liquid-canvas" style="position:fixed;inset:0;z-index:-1;width:100%;height:100%"></canvas>
 
 <div id="setup">
   <div style="font-size:3rem">💰</div>
@@ -225,7 +224,7 @@ body {
       <div class="action-btn" onclick="openModal('trading')"><div class="icon">📈</div><div class="label">Retirada Trading</div></div>
       <div class="action-btn" onclick="openModal('gasto')"><div class="icon">💸</div><div class="label">Nuevo Gasto</div></div>
     </div>
-    <div class="section-label">Este mes por categoría</div>
+    <div class="section-label">Evolución ingresos vs gastos</div>
     <div class="chart-card"><canvas id="chart-cat"></canvas></div>
     <div class="section-label">Últimos movimientos</div>
     <div class="movements-list" id="movements-list">
@@ -253,11 +252,11 @@ body {
         <option value="Vinted retirada">📦 Vinted retirada</option>
         <option value="Trading retirada">📈 Trading retirada</option>
         <option value="Otros ingresos">💰 Otros ingresos</option>
+        <option value="Ahorro">💰 Ahorro</option>
         <option value="Comida">🍔 Comida</option>
         <option value="Gasolina">⛽ Gasolina</option>
         <option value="Compras">🛍️ Compras</option>
         <option value="Suscripciones">📱 Suscripciones</option>
-       <option value="Ahorro">💰 Ahorro</option>
         <option value="Personal">👤 Personal</option>
       </select>
     </div>
@@ -334,11 +333,28 @@ body {
     renderChart();
   }
   function renderChart(){
-    const cats={};
-    allMovements.forEach(m=>{if(!cats[m.categoria])cats[m.categoria]=0;cats[m.categoria]+=m.cantidad;});
+    const days={};
+    allMovements.forEach(m=>{
+      const d=m.fecha?m.fecha.substring(0,10):'Sin fecha';
+      if(!days[d])days[d]={ingresos:0,gastos:0};
+      if(m.tipo==='Ingreso')days[d].ingresos+=m.cantidad;
+      else days[d].gastos+=m.cantidad;
+    });
+    const sortedDays=Object.keys(days).sort();
+    const labels=sortedDays.map(d=>{const[y,mo,dy]=d.split('-');return`${dy}/${mo}`;});
+    let cumI=0,cumG=0;
+    const dataI=[],dataG=[];
+    sortedDays.forEach(d=>{cumI+=days[d].ingresos;cumG+=days[d].gastos;dataI.push(cumI);dataG.push(cumG);});
     if(catChart)catChart.destroy();
     const ctx=document.getElementById('chart-cat').getContext('2d');
-    catChart=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(cats),datasets:[{data:Object.values(cats),backgroundColor:['#7b6cff','#c8ff80','#ff6eb0','#ffb547','#00c8ff','#ff8c69','#c084fc','#34d399'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'68%',plugins:{legend:{position:'bottom',labels:{color:'rgba(200,180,255,0.6)',font:{size:10,family:'DM Sans'},boxWidth:10,boxHeight:10,padding:10}},tooltip:{callbacks:{label:ctx=>` ${fmt(ctx.raw)}`}}}}});
+    const gradI=ctx.createLinearGradient(0,0,0,200);
+    gradI.addColorStop(0,'rgba(200,255,128,0.35)');gradI.addColorStop(1,'rgba(200,255,128,0)');
+    const gradG=ctx.createLinearGradient(0,0,0,200);
+    gradG.addColorStop(0,'rgba(255,110,176,0.25)');gradG.addColorStop(1,'rgba(255,110,176,0)');
+    catChart=new Chart(ctx,{type:'line',data:{labels,datasets:[
+      {label:'Ingresos',data:dataI,borderColor:'#c8ff80',backgroundColor:gradI,borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#c8ff80',pointBorderColor:'#07050f',pointBorderWidth:2,fill:true,tension:0.4},
+      {label:'Gastos',data:dataG,borderColor:'#ff6eb0',backgroundColor:gradG,borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#ff6eb0',pointBorderColor:'#07050f',pointBorderWidth:2,fill:true,tension:0.4}
+    ]},options:{responsive:true,maintainAspectRatio:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{color:'rgba(200,180,255,0.7)',font:{size:11,family:'DM Sans'},boxWidth:12,boxHeight:12,padding:16,usePointStyle:true}},tooltip:{backgroundColor:'rgba(25,10,55,0.95)',titleColor:'rgba(200,180,255,0.8)',bodyColor:'#f0eeff',borderColor:'rgba(160,100,255,0.3)',borderWidth:1,padding:10,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmt(ctx.raw)}`}}},scales:{x:{grid:{color:'rgba(160,100,255,0.08)'},ticks:{color:'rgba(200,180,255,0.5)',font:{size:10,family:'DM Sans'}}},y:{grid:{color:'rgba(160,100,255,0.08)'},ticks:{color:'rgba(200,180,255,0.5)',font:{size:10,family:'DM Sans'},callback:v=>v+'€'}}}}});
   }
   function openModal(type){
     const titles={vinted:'📦 Retirada Vinted',trading:'📈 Retirada Trading',gasto:'💸 Nuevo Gasto'};
@@ -385,34 +401,6 @@ body {
   function scrollToMovements(){document.getElementById('scroll-area').scrollTo({top:9999,behavior:'smooth'});}
   const st=localStorage.getItem('fin_token'),sd=localStorage.getItem('fin_db');
   if(st&&sd){TOKEN=st;DB_ID=sd;document.getElementById('setup').style.display='none';document.getElementById('app').style.display='flex';loadData();}
-</script>
-<script>
-(function(){
-  const canvas=document.getElementById('liquid-canvas');
-  const ctx=canvas.getContext('2d');
-  let W,H,t=0;
-  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-  resize();window.addEventListener('resize',resize);
-  function draw(){
-    t+=0.003;ctx.clearRect(0,0,W,H);
-    ctx.fillStyle='#07050f';ctx.fillRect(0,0,W,H);
-    [{x:0.2+Math.sin(t*0.7)*0.15,y:0.15+Math.cos(t*0.5)*0.1,r:0.45,a:0.5,c:'120,40,220'},
-     {x:0.8+Math.cos(t*0.6)*0.1,y:0.8+Math.sin(t*0.8)*0.1,r:0.4,a:0.45,c:'80,10,180'},
-     {x:0.5+Math.sin(t*0.4)*0.2,y:0.5+Math.cos(t*0.9)*0.15,r:0.35,a:0.3,c:'100,20,200'},
-     {x:0.1+Math.cos(t*1.1)*0.08,y:0.7+Math.sin(t*0.7)*0.12,r:0.25,a:0.35,c:'60,0,140'},
-     {x:0.9+Math.sin(t*0.5)*0.08,y:0.2+Math.cos(t*1.2)*0.1,r:0.3,a:0.3,c:'140,50,255'}
-    ].forEach(b=>{
-      const gx=b.x*W,gy=b.y*H,gr=b.r*Math.max(W,H);
-      const g=ctx.createRadialGradient(gx,gy,0,gx,gy,gr);
-      g.addColorStop(0,`rgba(${b.c},${b.a})`);
-      g.addColorStop(0.5,`rgba(${b.c},${b.a*0.4})`);
-      g.addColorStop(1,`rgba(${b.c},0)`);
-      ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
 </script>
 </body>
 </html>
